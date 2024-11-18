@@ -68,7 +68,7 @@ return {
     opts = function(_, opts)
       -- Other blankline configuration here
       return require("indent-rainbowline").make_opts(opts, {
-        color_transparency = 0.15,
+        color_transparency = 0.05,
         -- The 24-bit colors to mix with the background. Specified in hex.
         -- { 0xffff40, 0x79ff79, 0xff79ff, 0x4fecec, } by default
         colors = { 0x000000, 0xffffff, 0x009736, 0xee2a35 },
