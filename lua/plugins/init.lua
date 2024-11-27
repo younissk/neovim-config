@@ -13,19 +13,6 @@ return {
     end,
   },
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup {
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-        },
-      }
-    end,
-  },
-  {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
@@ -90,5 +77,36 @@ return {
       "folke/trouble.nvim", -- optional
       "nvim-telescope/telescope.nvim",
     },
+  },
+  {
+    "stevearc/oil.nvim",
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+  },
+  {
+    "folke/zen-mode.nvim",
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && yarn install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
+  },
+  {
+    "supermaven-inc/supermaven-nvim",
+    lazy = false, -- Ensure the plugin loads immediately
+    config = function()
+      require("supermaven-nvim").setup {}
+    end,
   },
 }
