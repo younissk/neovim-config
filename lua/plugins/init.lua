@@ -25,6 +25,8 @@ return {
         "prettier",
         "pyre", -- Added python language server here
         "typescript-language-server",
+        "denols",
+        "deno",
       },
     },
   },
