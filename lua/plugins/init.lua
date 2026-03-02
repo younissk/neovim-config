@@ -23,10 +23,11 @@ return {
         "html-lsp",
         "css-lsp",
         "prettier",
-        "pyre", -- Added python language server here
+        "pyright", -- Python language server
+        "ruff", -- Python formatter + linter
+        "ruff-lsp", -- Python lint diagnostics
+        "debugpy", -- Python debug adapter
         "typescript-language-server",
-        "denols",
-        "deno",
       },
     },
   },
@@ -107,10 +108,41 @@ return {
     ft = { "markdown" },
   },
   {
-    "supermaven-inc/supermaven-nvim",
-    lazy = false, -- Ensure the plugin loads immediately
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
     config = function()
-      require("supermaven-nvim").setup {}
+      require("copilot").setup {
+        suggestion = { enabled = true, auto_trigger = true },
+        panel = { enabled = true },
+      }
+    end,
+  },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "mfussenegger/nvim-dap-python",
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neodev/nvim-nio" },
+      },
+    },
+    ft = "python",
+    config = function()
+      require "configs.dap"
+    end,
+  },
+  {
+    "nvim-neotest/neotest",
+    ft = "python",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-neotest/neotest-python",
+    },
+    config = function()
+      require "configs.neotest"
     end,
   },
   -- nvim v0.8.0
@@ -136,7 +168,7 @@ return {
   },
   {
     "lewis6991/gitsigns.nvim",
-    requires = {
+    dependencies = {
       "nvim-lua/plenary.nvim",
     },
   },

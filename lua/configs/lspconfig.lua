@@ -8,6 +8,7 @@ local servers = {
   "html",
   "cssls",
   "ts_ls",
+  "ruff_lsp",
   -- "denols"
 }
 local nvlsp = require "nvchad.configs.lspconfig"
@@ -20,6 +21,24 @@ for _, lsp in ipairs(servers) do
     capabilities = nvlsp.capabilities,
   }
 end
+
+-- pyright with virtualenv awareness
+lspconfig.pyright.setup {
+  on_attach = nvlsp.on_attach,
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "workspace",
+      },
+      venvPath = ".",
+      venv = ".venv",
+    },
+  },
+}
 
 -- configuring single server, example: typescript
 -- lspconfig.ts_ls.setup {
