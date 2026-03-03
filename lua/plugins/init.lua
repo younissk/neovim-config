@@ -100,7 +100,18 @@ return {
     event = "InsertEnter",
     config = function()
       require("copilot").setup {
-        suggestion = { enabled = true, auto_trigger = true },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          keymap = {
+            accept = "<C-l>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-e>",
+          },
+        },
         panel = { enabled = true },
       }
     end,
@@ -158,5 +169,34 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
+  },
+  -- Git UX plugins
+  {
+    "NeogitOrg/neogit",
+    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim", "sindrets/diffview.nvim" },
+    config = function()
+      require('neogit').setup({ integrations = { diffview = true } })
+      vim.keymap.set('n', '<leader>g', '<cmd>Neogit kind=float<CR>', { desc = 'Neogit' })
+    end,
+  },
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require('diffview').setup({})
+      vim.keymap.set('n', '<leader>dv', '<cmd>DiffviewOpen<CR>', { desc = 'Diffview Open' })
+      vim.keymap.set('n', '<leader>dc', '<cmd>DiffviewClose<CR>', { desc = 'Diffview Close' })
+    end,
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    branch = "0.1.x",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>fc', builtin.git_commits, { desc = 'Git Commits' })
+      vim.keymap.set('n', '<leader>fb', builtin.git_bcommits, { desc = 'Buffer Commits' })
+      vim.keymap.set('n', '<leader>fs', builtin.git_status, { desc = 'Git Status' })
+    end,
   },
 }
