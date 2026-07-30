@@ -19,4 +19,31 @@ map("n", "<leader>tr", function() require("neotest").run.run() end, { desc = "Te
 map("n", "<leader>tf", function() require("neotest").run.run(vim.fn.expand "%") end, { desc = "Test Run file" })
 map("n", "<leader>ts", function() require("neotest").summary.toggle() end, { desc = "Test Summary" })
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+-- Python runner: uses uv run if available, falls back to .venv, then system python
+map("n", "<F5>", function()
+  local file = vim.fn.expand "%:p"
+  local cwd = vim.fn.getcwd()
+  -- exepath first, so a uv from brew or the system also counts; ~/.local/bin
+  -- is only where the standalone installer happens to put it. Never a literal
+  -- home path — this config runs on machines with a different $HOME.
+  local uv = vim.fn.exepath "uv"
+  if uv == "" then
+    uv = vim.fn.expand "~/.local/bin/uv"
+  end
+  local cmd
+
+  if vim.fn.executable(uv) == 1 and (vim.fn.isdirectory(cwd .. "/.venv") == 1 or vim.fn.filereadable(cwd .. "/pyproject.toml") == 1) then
+    cmd = uv .. " run python " .. vim.fn.shellescape(file)
+  elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+    cmd = cwd .. "/.venv/bin/python " .. vim.fn.shellescape(file)
+  else
+    cmd = "python3 " .. vim.fn.shellescape(file)
+  end
+
+  -- Open a bottom terminal split and run
+  vim.cmd "botright 15split"
+  vim.fn.termopen(cmd, { cwd = cwd })
+  vim.cmd "startinsert"
+end, { desc = "Python Run file" })
+
+

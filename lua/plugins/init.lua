@@ -40,7 +40,9 @@ return {
         "vimdoc",
         "html",
         "css",
-        "python", -- Added python syntax highlighting here
+        "python",
+        "markdown",
+        "markdown_inline",
       },
     },
   },

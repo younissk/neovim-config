@@ -8,7 +8,6 @@ local servers = {
   "html",
   "cssls",
   "ts_ls",
-  "ruff",
   -- "denols"
 }
 local nvlsp = require "nvchad.configs.lspconfig"
@@ -22,11 +21,31 @@ for _, lsp in ipairs(servers) do
   }
 end
 
--- pyright with virtualenv awareness
-lspconfig.pyright.setup {
+-- Configure ruff LSP
+lspconfig.ruff.setup {
+  cmd = { "ruff", "server" },
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
+}
+
+-- pyright with virtualenv awareness
+local pyright_cmd = vim.fn.exepath "pyright-langserver"
+if pyright_cmd == "" then
+  pyright_cmd = vim.fn.expand "~/.local/bin/pyright-langserver"
+end
+lspconfig.pyright.setup {
+  cmd = { pyright_cmd, "--stdio" },
+  on_attach = nvlsp.on_attach,
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+  before_init = function(_, config)
+    -- Point pyright at the uv venv python for the current project
+    local venv_python = (config.root_dir or vim.fn.getcwd()) .. "/.venv/bin/python"
+    if vim.fn.executable(venv_python) == 1 then
+      config.settings.python.pythonPath = venv_python
+    end
+  end,
   settings = {
     python = {
       analysis = {
