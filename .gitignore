@@ -1,1 +1,15 @@
 *.swp
+.netrwhist
+
+# Plugin payload and caches — installed state, not configuration. lazy.nvim
+# reinstalls all of it from lazy-lock.json, and lazy/ alone is ~66M of other
+# projects' git clones. Only *.swp was ignored before, so a `git add -A` here
+# would have committed 137M of vendored history into a 16-file config repo.
+lazy/
+luac/
+
+# Hand-vendored packages under pack/*/{start,opt} are full git clones too.
+# pack/github/start/copilot.vim used to be tracked as a bare gitlink with no
+# .gitmodules entry backing it, which checks out as an empty directory on every
+# other machine — the tracking was worse than not tracking it.
+pack/
